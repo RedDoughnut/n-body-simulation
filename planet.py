@@ -7,13 +7,14 @@ class Planet:
         self.pos = vec2(x, y)
         self.vel = vel
         self.mass = mass
-        self.G = 1000
+        self.G = 100
         self.EPSILON = 5
         self.trail = []
+        self.radius = 20
         self.maxTrailSize = 1000
         self.frameNumber = 0
     def update(self, window : pygame.Surface):
-        pygame.draw.circle(window, (255,0,0), (self.pos.x, self.pos.y), 20)
+        pygame.draw.circle(window, (255,0,0), (self.pos.x, self.pos.y), self.radius)
         self.frameNumber+=1
         if self.frameNumber % 3 != 0:
             pass
@@ -21,8 +22,14 @@ class Planet:
         self.trail.append(self.pos)
         if len(self.trail) > self.maxTrailSize:
             self.trail.pop(0)
+        last = -1
         for point in self.trail:
-            pygame.draw.circle(window, (255,0,0), (point.x, point.y), 2)
+            if last==-1:
+                last = point
+                continue
+            
+            pygame.draw.line(window, (0,0,255), (last.x, last.y), (point.x, point.y))
+            last = point
     def compare(self, other) -> vec2:
         delta = other.pos - self.pos                   
         r = delta.magnitude()
